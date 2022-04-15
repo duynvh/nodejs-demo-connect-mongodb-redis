@@ -1,0 +1,77 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - '3000:3000'
+    # links:
+    # - mongo1
+    # - redis
+    environment:
+      MONGODB_DATABASE: demo
+      MONGODB_HOST_1: mongo1
+      MONGODB_HOST_2: mongo2
+      MONGODB_HOST_3: mongo3
+      MONGODB_PORT_1: 27017
+      MONGODB_PORT_2: 27017
+      MONGODB_PORT_3: 27017
+    networks:
+      - mongors-network
+
+        # REDIS_HOST: redis
+        # REDIS_PORT: 6379
+
+  # mongo1:
+  #   container_name: mongo1
+  #   image: mongo
+  #   volumes:
+  #     - ~/mongors/data1:/data/db
+  #     - ./rs-init.sh:/scripts/rs-init.sh
+  #   # network_mode: bridge
+  #   ports:
+  #     - 27021:27017
+  #   links:
+  #     - mongo2
+  #     - mongo3
+  #   restart: always
+  #   entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'dbrs']
+  # mongo2:
+  #   container_name: mongo2
+  #   image: mongo
+  #   volumes:
+  #     - ~/mongors/data2:/data/db
+  #   # network_mode: bridge
+  #   ports:
+  #     - 27022:27017
+  #   restart: always
+  #   entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'dbrs']
+  # mongo3:
+  #   container_name: mongo3
+  #   image: mongo
+  #   volumes:
+  #     - ~/mongors/data3:/data/db
+  #   # network_mode: bridge
+  #   ports:
+  #     - 27023:27017
+  #   restart: always
+  #   entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'dbrs']
+
+  # redis:
+  #   image: 'redis:latest'
+  #   command: ['redis-server', '--appendonly', 'yes']
+  #   ports:
+  #     - '6379:6379'
+
+  # redis-commander:
+  #   image: rediscommander/redis-commander:latest
+  #   environment:
+  #     - REDIS_HOSTS=local:redis:6379
+  #     - HTTP_USER=root
+  #     - HTTP_PASSWORD=qwerty
+  #   ports:
+  #     - 8081:8081
+  #   depends_on:
+  #     - redis
+networks:
+  mongors-network:
+    external: true
